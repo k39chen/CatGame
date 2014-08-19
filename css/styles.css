@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'GothamRounded';
+    src: url('../assets/fonts/gotham-rounded-medium.otf');
+}
+html, body {
+    font-family: "GothamRounded", Helvetica, Arial, sans-serif;
+    background-color: #1A1A1D;
+    color: #D5D8DF;
+}
