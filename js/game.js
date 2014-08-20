@@ -4,7 +4,7 @@ var Game = {
      */
     Components: {
         board: null,
-        cat: null,
+        cats: null,
         treeMask: null
     },
     /**
@@ -19,7 +19,8 @@ var Game = {
         var boardHeight = rand(8,Math.min(boardWidth-2,16));
 
         Game.Components.board = new Board(BOARD_TYPE.SQUARE, boardWidth, boardHeight);
-        Game.Components.cat = new Cat(Game.Components.board);
+        Game.Components.cats = [];
+        Game.Components.cats.push(new Cat(Game.Components.board));
 
         // create a tree mask
         Game.Components.treeMask = $("<div>")

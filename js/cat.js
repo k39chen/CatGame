@@ -34,8 +34,9 @@ function Cat(board,x,y) {
             this.x = rand(distanceFromEdge, this.board.width - distanceFromEdge),
             this.y = rand(distanceFromEdge, this.board.height - distanceFromEdge);
 
-            // make sure that we don't place the cat on a puddle
-            if ($(".puddle[x="+this.x+"][y="+this.y+"]").length == 0) break;
+            // make sure that we don't place the cat on a puddle or another cat
+            if ($(".puddle[x="+this.x+"][y="+this.y+"]").length == 0 &&
+                $(".cat[x="+this.x+"][y="+this.y+"]").length == 0) break;
         }
     }
 

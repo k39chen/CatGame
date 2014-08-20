@@ -40,6 +40,9 @@ h1 {
     background-image: url("../assets/images/tree.png");
     opacity: 0.7;
 }
+#tree-mask.block {
+    background-image: url("../assets/images/treeblock.png");
+}
 .tile {
     background-image: url("../assets/images/grass.png");
 }

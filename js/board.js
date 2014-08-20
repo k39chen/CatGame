@@ -86,16 +86,20 @@ Board.prototype.init = function() {
     $hit.mousemove(function(e){
         var coord = self.getCoord(e);
 
-        //if (coord && !self.hasTree(coord) && !self.hasCat(coord) && !self.hasPuddle(coord) && !self.hasDirt(coord)) {
-            $("#tree-mask").show().css({
-                zIndex: 1000 + coord.y,
-                left: coord.x * TILE.width,
-                top: coord.y * TILE.height - TILE.height/2
-            });
-        //}
+        $("#tree-mask").show().removeClass("block").css({
+            zIndex: 1000 + coord.y,
+            left: coord.x * TILE.width,
+            top: coord.y * TILE.height - TILE.height/2
+        });
+
+        if (coord && !self.hasTree(coord) && !self.hasCat(coord) && !self.hasPuddle(coord) && !self.hasDirt(coord)) {
+            // ...
+        } else {
+            $("#tree-mask").addClass("block");
+        }
     });
     $hit.mouseout(function(e){
-        $("#tree-mask").hide();
+        $("#tree-mask").removeClass("block").hide();
     });
     $hit.click(function(e){
         var coord = self.getCoord(e);
@@ -104,7 +108,9 @@ Board.prototype.init = function() {
             self.trees.push(new Tree(self,coord.x,coord.y));
 
             // have the cat make its next move
-            Game.Components.cat.move();
+            for (var i=0; i<Game.Components.cats.length; i++) {
+                Game.Components.cats[i].move();
+            }
         }
     });
 };
@@ -116,6 +122,7 @@ Board.prototype.init = function() {
 Board.prototype.destroy = function() {
     var self = this,
         $el = self.element;
+        $hit = $("#board-hit")
 
     for (var y=0; y<self.height; y++) {
         for (var x=0; x<self.width; x++) {
@@ -130,9 +137,9 @@ Board.prototype.destroy = function() {
     for (var i=0; i<self.puddles.length; i++) {
         self.puddles[i].destroy();
     }
-    $el.unbind("mouseover");
-    $el.unbind("mouseout");
-    $el.unbind("click");
+    $hit.unbind("mouseover");
+    $hit.unbind("mouseout");
+    $hit.unbind("click");
 
     $el.empty();
 };
