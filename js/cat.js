@@ -77,7 +77,12 @@ Cat.prototype.render = function() {
         zIndex: 1000 + this.y,
         left: this.x * CAT.width,
         top: this.y * CAT.height - CAT.height/2
-    })
+    });
+
+
+    // everywhere the cat goes, the tile below it turns to dirt
+    $(".tile[x="+this.x+"][y="+this.y+"]").addClass("dirt");
+    console.log($(".tile[x="+this.x+"][y="+this.y+"]"));
 };
 /**
  * The cat must now make a move.

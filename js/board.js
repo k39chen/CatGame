@@ -55,6 +55,12 @@ Board.prototype.init = function() {
         left: $el.offset().left,
         top: $el.offset().top
     });
+    $(window).resize(function(){
+        $hit.css({
+            left: $el.offset().left,
+            top: $el.offset().top
+        })
+    });
 
     // place puddles in random coordinates
     var numPuddles = 20;
