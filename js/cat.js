@@ -5,6 +5,12 @@ var CAT = {
     width: 48,
     height: 41
 };
+var DIRECTION = {
+    0: {x:-1},
+    1: {y:+1},
+    2: {x:+1},
+    3: {y:-1}
+};
 /**
  * The Cat class.
  *
@@ -18,7 +24,6 @@ function Cat(board,x,y) {
     this.board = board;
     this.x = x;
     this.y = y;
-
 
     // we're going to randomly position the cat in no x or y is provided!
     if (x === null || x === undefined || y === null || y === undefined) {
@@ -42,16 +47,14 @@ Cat.prototype.init = function() {
         .addClass("entity cat")
         .attr("x",this.x)
         .attr("y",this.y)
-        .css({
-            zIndex: 1000 + this.y,
-            left: this.x * CAT.width,
-            top: this.y * CAT.height - CAT.height/2
-        })
         .hover(
             function() { $(this).addClass("hover"); },
             function() { $(this).removeClass("hover"); }
         )
         .appendTo(self.board.element);
+
+    // render the cat
+    this.render();
 };
 /**
  * Destroys the cat
@@ -64,3 +67,54 @@ Cat.prototype.destroy = function() {
 
     $el.remove();
 };
+/**
+ * Renders the cat.
+ *
+ * @method render
+ */
+Cat.prototype.render = function() {
+    this.element.css({
+        zIndex: 1000 + this.y,
+        left: this.x * CAT.width,
+        top: this.y * CAT.height - CAT.height/2
+    })
+};
+/**
+ * The cat must now make a move.
+ *
+ * @method move
+ * @return {Object} The new coordinate of the cat.
+ */
+Cat.prototype.move = function() {
+    var self = this,
+        coord = {x:self.x, y:self.y};
+
+    // select a random direction
+    var s = rand(0,4);
+
+    // apply the change(s)
+    for (var c in DIRECTION[s]) {
+        coord[c] += DIRECTION[s][c];
+    }
+
+    // update position
+    self.x = coord.x;
+    self.y = coord.y;
+    self.element.attr("x",self.x);
+    self.element.attr("y",self.y);
+
+    self.render();
+};
+/**
+ * Checks if the cat can move to the coordinate.
+ *
+ * @method canMove
+ * @param coord {Object} The request coordinates.
+ * @return {Boolean} The result of the evaluation.
+ */
+Cat.prototype.canMove = function(coord) {
+    var scoord = "[x="+coord.x+"][y="+coord.y+"]";
+    return $(".tree"+scoord).length == 0 &&
+           $(".puddle"+scoord).length == 0 &&
+           $(".cat"+scoord).length == 0;
+}

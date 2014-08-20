@@ -1,62 +1,62 @@
 /**
- * Constants for tiles.
+ * Constants for puddles.
  */
-var TILE = {
+var PUDDLE = {
     width: 48,
     height: 41
 };
 /**
- * The Tile class.
+ * The Puddle class.
  *
- * @class Tile
+ * @class Puddle
  * @param board {Object} The board object.
- * @param x {Number} The x position of the tile.
- * @param y {Number} The y position of the tile.
+ * @param x {Number} The x position of the puddle.
+ * @param y {Number} The y position of the puddle.
  */
-function Tile(board,x,y) {
+function Puddle(board,x,y) {
     this.element = null; // this will be created in the init.
     this.board = board;
     this.x = x;
     this.y = y;
 
-    // initializes the tile
+    // initializes the puddle
     this.init();
 }
 /**
- * Initializes the tile.
+ * Initializes the puddle.
  *
  * @method init
  */
-Tile.prototype.init = function() {
+Puddle.prototype.init = function() {
     var self = this;
 
     self.element = $("<div>")
-        .addClass("entity tile")
+        .addClass("entity puddle")
         .attr("x",this.x)
         .attr("y",this.y)
         .appendTo(self.board.element);
 
-    // render the tile
+    // render the puddle
     this.render();
 };
 /**
- * Renders the tile.
+ * Renders the puddle.
  *
  * @method render
  */
-Tile.prototype.render = function() {
+Puddle.prototype.render = function() {
     this.element.css({
-        zIndex: 1000 +this.y,
-        left: this.x * TILE.width,
-        top: this.y * TILE.height
+        zIndex: 1000 + this.y,
+        left: this.x * PUDDLE.width,
+        top: this.y * PUDDLE.height
     })
 };
 /**
- * Destroys the tile
+ * Destroys the puddle
  *
  * @method destroy
  */
-Tile.prototype.destroy = function() {
+Puddle.prototype.destroy = function() {
     var self = this,
         $el = self.element;
 

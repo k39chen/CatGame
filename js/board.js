@@ -21,6 +21,7 @@ function Board(type, width, height) {
     this.width = width;
     this.height = height;
     this.tiles = [];
+    this.puddles = [];
     this.trees = [];
 
     // initialize the board
@@ -54,11 +55,23 @@ Board.prototype.init = function() {
         left: $el.offset().left,
         top: $el.offset().top
     });
+
+    // place puddles in random coordinates
+    var numPuddles = 20;
+    for (var i=0; i<numPuddles; i++) {
+        var x = rand(0,self.width-1),
+            y = rand(0,self.height-1);
+
+        if (!self.hasPuddle({x:x,y:y})) {
+            self.puddles.push(new Puddle(self,x,y));
+        }
+    }
+
     // determine hover events over which tiles
     $hit.mousemove(function(e){
         var coord = self.getCoord(e);
 
-        if (coord && !self.hasTree(coord) && !self.hasCat(coord)) {
+        if (coord && !self.hasTree(coord) && !self.hasCat(coord) && !self.hasPuddle(coord)) {
             $("#tree-mask").show().css({
                 zIndex: 1000 + coord.y,
                 left: coord.x * TILE.width,
@@ -74,8 +87,11 @@ Board.prototype.init = function() {
     $hit.click(function(e){
         var coord = self.getCoord(e);
 
-        if (!self.hasTree(coord) && !self.hasTree(coord)) {
+        if (!self.hasTree(coord) && !self.hasCat(coord) && !self.hasPuddle(coord)) {
             self.trees.push(new Tree(self,coord.x,coord.y));
+
+            // have the cat make its next move
+            Game.Components.cat.move();
         }
     });
 };
@@ -97,6 +113,9 @@ Board.prototype.destroy = function() {
     }
     for (var i=0; i<self.trees.length; i++) {
         self.trees[i].destroy();
+    }
+    for (var i=0; i<self.puddles.length; i++) {
+        self.puddles[i].destroy();
     }
     $el.unbind("mouseover");
     $el.unbind("mouseout");
@@ -127,6 +146,16 @@ Board.prototype.getCoord = function(e) {
  */
 Board.prototype.hasTree = function(coord) {
     return $(".tree[x="+coord.x+"][y="+coord.y+"]").length > 0;
+};
+/**
+ * Checks for a puddle at the given coordinate.
+ *
+ * @method hasPuddle
+ * @param coord {Object} The coordinate object.
+ * @return {Boolean} The result of the evaluation.
+ */
+Board.prototype.hasPuddle = function(coord) {
+    return $(".puddle[x="+coord.x+"][y="+coord.y+"]").length > 0;
 };
 /**
  * Checks for a cat at the given coordinate.

@@ -34,12 +34,22 @@ Tree.prototype.init = function() {
         .addClass("entity tree")
         .attr("x",this.x)
         .attr("y",this.y)
-        .css({
-            zIndex: 1000 + this.y,
-            left: this.x * TREE.width,
-            top: this.y * TREE.height - TREE.height / 2
-        })
         .appendTo(self.board.element);
+
+    // render the tree
+    this.render();
+};
+/**
+ * Renders the tree.
+ *
+ * @method render
+ */
+Tree.prototype.render = function() {
+    this.element.css({
+        zIndex: 1000 + this.y,
+        left: this.x * TREE.width,
+        top: this.y * TREE.height - TREE.height/2
+    })
 };
 /**
  * Destroys the tree
