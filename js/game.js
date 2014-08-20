@@ -4,7 +4,8 @@ var Game = {
      */
     Components: {
         board: null,
-        cat: null
+        cat: null,
+        treeMask: null
     },
     /**
      * Initialize the game components and reset the game states.
@@ -20,7 +21,17 @@ var Game = {
         console.log(boardWidth,boardHeight)
 
         Game.Components.board = new Board(BOARD_TYPE.SQUARE, boardWidth, boardHeight);
-        Game.Components.cat = new Cat(Game.Components.board, 0, 0);
+        Game.Components.cat = new Cat(Game.Components.board);
+
+        // create a tree mask
+        Game.Components.treeMask = $("<div>")
+            .attr("id","tree-mask")
+            .addClass("entity")
+            .css({
+                top: 0 - TILE.height/2,
+                left: 0
+            })
+            .appendTo(Game.Components.board.element);
 
         // initialize all the game buttons
         $(".button").hover(

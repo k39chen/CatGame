@@ -21,6 +21,14 @@ function Cat(board,x,y) {
     this.x = x;
     this.y = y;
 
+
+    // we're going to randomly position the cat in no x or y is provided!
+    if (x === null || x === undefined || y === null || y === undefined) {
+        var distanceFromEdge = 5;
+        this.x = rand(distanceFromEdge, this.board.width - distanceFromEdge),
+        this.y = rand(distanceFromEdge, this.board.height - distanceFromEdge);
+    }
+
     // initializes the cat
     this.init();
 }
@@ -33,12 +41,14 @@ Cat.prototype.init = function() {
     var self = this;
 
     self.element = $("<div>")
-        .addClass("cat")
+        .addClass("entity cat")
         .data("x",this.x)
         .data("y",this.y)
         .css({
             width: CAT.width,
-            height: CAT.height
+            height: CAT.height,
+            left: self.x * (CAT.width + CAT.hPadding*2),
+            top: self.y * (CAT.height + CAT.vPadding*2)
         })
         .hover(
             function() { $(this).addClass("hover"); },

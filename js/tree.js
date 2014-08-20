@@ -1,51 +1,51 @@
 /**
- * Constants for tiles.
+ * Constants for trees.
  */
-var TILE = {
+var TREE = {
     width: 48,
     height: 41
 };
 /**
- * The Tile class.
+ * The Tree class.
  *
- * @class Tile
+ * @class Tree
  * @param board {Object} The board object.
- * @param x {Number} The x position of the tile.
- * @param y {Number} The y position of the tile.
+ * @param x {Number} The x position of the tree.
+ * @param y {Number} The y position of the tree.
  */
-function Tile(board,x,y) {
+function Tree(board,x,y) {
     this.element = null; // this will be created in the init.
     this.board = board;
     this.x = x;
     this.y = y;
 
-    // initializes the tile
+    // initializes the tree
     this.init();
 }
 /**
- * Initializes the tile.
+ * Initializes the tree.
  *
  * @method init
  */
-Tile.prototype.init = function() {
+Tree.prototype.init = function() {
     var self = this;
 
     self.element = $("<div>")
-        .addClass("entity tile")
+        .addClass("entity tree")
         .data("x",this.x)
         .data("y",this.y)
         .css({
-            left: this.x * TILE.width,
-            top: this.y * TILE.height
+            left: this.x * TREE.width,
+            top: this.y * TREE.height - TREE.height / 2
         })
         .appendTo(self.board.element);
 };
 /**
- * Destroys the tile
+ * Destroys the tree
  *
  * @method destroy
  */
-Tile.prototype.destroy = function() {
+Tree.prototype.destroy = function() {
     var self = this,
         $el = self.element;
 
