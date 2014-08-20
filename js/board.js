@@ -59,7 +59,7 @@ Board.prototype.init = function() {
         $hit.css({
             left: $el.offset().left,
             top: $el.offset().top
-        })
+        });
     });
 
     // place puddles in random coordinates
@@ -69,7 +69,16 @@ Board.prototype.init = function() {
             y = rand(0,self.height-1);
 
         if (!self.hasPuddle({x:x,y:y})) {
-            self.puddles.push(new Puddle(self,x,y));
+            self.tiles[y][x].element.addClass("puddle");
+        }
+    }
+    var numDirt = 20;
+    for (var i=0; i<numDirt; i++) {
+        var x = rand(0,self.width-1),
+            y = rand(0,self.height-1);
+
+        if (!self.hasPuddle({x:x,y:y})) {
+            self.tiles[y][x].element.addClass("dirt");
         }
     }
 
@@ -77,7 +86,7 @@ Board.prototype.init = function() {
     $hit.mousemove(function(e){
         var coord = self.getCoord(e);
 
-        //if (coord && !self.hasTree(coord) && !self.hasCat(coord) && !self.hasPuddle(coord)) {
+        //if (coord && !self.hasTree(coord) && !self.hasCat(coord) && !self.hasPuddle(coord) && !self.hasDirt(coord)) {
             $("#tree-mask").show().css({
                 zIndex: 1000 + coord.y,
                 left: coord.x * TILE.width,
@@ -86,14 +95,12 @@ Board.prototype.init = function() {
         //}
     });
     $hit.mouseout(function(e){
-        var coord = self.getCoord(e);
-
         $("#tree-mask").hide();
     });
     $hit.click(function(e){
         var coord = self.getCoord(e);
 
-        if (!self.hasTree(coord) && !self.hasCat(coord) && !self.hasPuddle(coord)) {
+        if (!self.hasTree(coord) && !self.hasCat(coord) && !self.hasPuddle(coord) && !self.hasDirt(coord)) {
             self.trees.push(new Tree(self,coord.x,coord.y));
 
             // have the cat make its next move
@@ -162,6 +169,16 @@ Board.prototype.hasTree = function(coord) {
  */
 Board.prototype.hasPuddle = function(coord) {
     return $(".puddle[x="+coord.x+"][y="+coord.y+"]").length > 0;
+};
+/**
+ * Checks for a dirt at the given coordinate.
+ *
+ * @method hasDirt
+ * @param coord {Object} The coordinate object.
+ * @return {Boolean} The result of the evaluation.
+ */
+Board.prototype.hasDirt = function(coord) {
+    return $(".dirt[x="+coord.x+"][y="+coord.y+"]").length > 0;
 };
 /**
  * Checks for a cat at the given coordinate.

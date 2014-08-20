@@ -46,7 +46,7 @@ h1 {
 .tile.dirt {
     background-image: url("../assets/images/dirt.png");
 }
-.puddle {
+.tile.puddle {
     background-image: url("../assets/images/water.png");
 }
 .tree {
