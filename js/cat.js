@@ -78,11 +78,8 @@ Cat.prototype.render = function() {
         left: this.x * CAT.width,
         top: this.y * CAT.height - CAT.height/2
     });
-
-
     // everywhere the cat goes, the tile below it turns to dirt
     $(".tile[x="+this.x+"][y="+this.y+"]").addClass("dirt");
-    console.log($(".tile[x="+this.x+"][y="+this.y+"]"));
 };
 /**
  * The cat must now make a move.
@@ -92,17 +89,38 @@ Cat.prototype.render = function() {
  */
 Cat.prototype.move = function() {
     var self = this,
-        coord = {x:self.x, y:self.y};
+        coord;
 
-    // select a random direction
-    var s = rand(0,4);
-
-    // apply the change(s)
-    for (var c in DIRECTION[s]) {
-        coord[c] += DIRECTION[s][c];
+    // select a random direction and sequential path
+    var s = rand(0,4),
+        p = [s],
+        n = 4;
+    for (var i=1; i<n; i++) {
+        if (i<n/2) {
+            p[i] = p[0] + i + n/2 * rand(0,1);
+        } else {
+            p[i] = p[n-1-i] + n/2;
+        }
+        p[i] = p[i] % n;
     }
 
-    // update position
+    // try each of the sequential path candidates until one is acceptable
+    var foundCoord = false;
+    for (var i=0; i<p.length && !foundCoord; i++) {
+        coord = {x:self.x, y:self.y};
+
+        // preview the new coordinates after applying the direction
+        var d = p[i];
+        for (var c in DIRECTION[d]) {
+            coord[c] += DIRECTION[d][c];
+
+            if (self.canMove(coord)) {
+                foundCoord = true;
+                break;
+            }
+        }
+    }
+    // update position to new coordinate
     self.x = coord.x;
     self.y = coord.y;
     self.element.attr("x",self.x);
