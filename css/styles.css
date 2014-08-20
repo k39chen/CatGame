@@ -16,54 +16,38 @@ h1 {
     margin: 0 auto;
     margin-bottom: 12px;
 }
+#board-hit {
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 100000000;
+}
 
 .entity {
     position: absolute;
     background-size: 48px 81px;
     width: 48px;
     height: 81px;
+    top: 0px;
+    left: 0px;
 }
 
 
 
 #tree-mask {
-    cursor: pointer;
     display: none;
     background-image: url("../assets/images/tree.png");
-    top: 0px;
-    left: 0px;
     opacity: 0.7;
 }
-
-
-
+.tree {
+    background-image: url("../assets/images/tree.png");
+}
 .tile {
-    cursor: pointer;
-    position: absolute;
     background-image: url("../assets/images/grass.png");
-    background-size: 48px 81px;
-    width: 48px;
-    height: 81px;
-    top: 0px;
-    left: 0px;
-}
-.tile.hover {
-    background-color: #f00;
-}
-.tile.selected {
-    background-color: #0f0;
 }
 .cat {
-    display: none;
-    cursor: pointer;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 32px;
-    height: 32px;
-    margin: 4px;
-    background-color: pink;
-    border-radius: 3px;
+    background-image: url("../assets/images/cat.png");
 }
 .cat.hover {
     /* change image */

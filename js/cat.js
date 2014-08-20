@@ -2,10 +2,8 @@
  * Constants for the cat.
  */
 var CAT = {
-    width: 32,
-    height: 32,
-    hPadding: 4,
-    vPadding: 4
+    width: 48,
+    height: 41
 };
 /**
  * The Cat class.
@@ -42,13 +40,12 @@ Cat.prototype.init = function() {
 
     self.element = $("<div>")
         .addClass("entity cat")
-        .data("x",this.x)
-        .data("y",this.y)
+        .attr("x",this.x)
+        .attr("y",this.y)
         .css({
-            width: CAT.width,
-            height: CAT.height,
-            left: self.x * (CAT.width + CAT.hPadding*2),
-            top: self.y * (CAT.height + CAT.vPadding*2)
+            zIndex: 1000 + this.y,
+            left: this.x * CAT.width,
+            top: this.y * CAT.height - CAT.height/2
         })
         .hover(
             function() { $(this).addClass("hover"); },

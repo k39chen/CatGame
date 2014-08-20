@@ -33,7 +33,8 @@ function Board(type, width, height) {
  */
 Board.prototype.init = function() {
     var self = this,
-        $el = self.element;
+        $el = self.element,
+        $hit = $("#board-hit");
 
     // add the tiles to the board
     for (var y=0; y<self.height; y++) {
@@ -47,26 +48,35 @@ Board.prototype.init = function() {
         width: self.width * TILE.width,
         height: (self.height+1) * TILE.height
     });
+    $hit.css({
+        width: self.width * TILE.width,
+        height: (self.height+1) * TILE.height,
+        left: $el.offset().left,
+        top: $el.offset().top
+    });
     // determine hover events over which tiles
-    $el.mouseover(function(e){
+    $hit.mousemove(function(e){
         var coord = self.getCoord(e);
 
-        if (coord) {
+        if (coord && !self.hasTree(coord) && !self.hasCat(coord)) {
             $("#tree-mask").show().css({
+                zIndex: 1000 + coord.y,
                 left: coord.x * TILE.width,
                 top: coord.y * TILE.height - TILE.height/2
             });
         }
     });
-    $el.mouseout(function(e){
+    $hit.mouseout(function(e){
         var coord = self.getCoord(e);
 
         $("#tree-mask").hide();
     });
-    $el.click(function(e){
+    $hit.click(function(e){
         var coord = self.getCoord(e);
 
-        // ...
+        if (!self.hasTree(coord) && !self.hasTree(coord)) {
+            self.trees.push(new Tree(self,coord.x,coord.y));
+        }
     });
 };
 /**
@@ -84,6 +94,9 @@ Board.prototype.destroy = function() {
                 self.tiles[y][x].destroy();
             }
         }
+    }
+    for (var i=0; i<self.trees.length; i++) {
+        self.trees[i].destroy();
     }
     $el.unbind("mouseover");
     $el.unbind("mouseout");
@@ -105,6 +118,26 @@ Board.prototype.getCoord = function(e) {
         y = Math.min(Math.floor(top / TILE.height), this.height-1);
     return {x:x,y:y};
 }
+/**
+ * Checks for a tree at the given coordinate.
+ *
+ * @method hasTree
+ * @param coord {Object} The coordinate object.
+ * @return {Boolean} The result of the evaluation.
+ */
+Board.prototype.hasTree = function(coord) {
+    return $(".tree[x="+coord.x+"][y="+coord.y+"]").length > 0;
+};
+/**
+ * Checks for a cat at the given coordinate.
+ *
+ * @method hasCat
+ * @param coord {Object} The coordinate object.
+ * @return {Boolean} The result of the evaluation.
+ */
+Board.prototype.hasCat = function(coord) {
+    return $(".cat[x="+coord.x+"][y="+coord.y+"]").length > 0;
+};
 /**
  * Resets the board.
  *

@@ -32,9 +32,10 @@ Tree.prototype.init = function() {
 
     self.element = $("<div>")
         .addClass("entity tree")
-        .data("x",this.x)
-        .data("y",this.y)
+        .attr("x",this.x)
+        .attr("y",this.y)
         .css({
+            zIndex: 1000 + this.y,
             left: this.x * TREE.width,
             top: this.y * TREE.height - TREE.height / 2
         })

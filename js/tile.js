@@ -32,8 +32,8 @@ Tile.prototype.init = function() {
 
     self.element = $("<div>")
         .addClass("entity tile")
-        .data("x",this.x)
-        .data("y",this.y)
+        .attr("x",this.x)
+        .attr("y",this.y)
         .css({
             left: this.x * TILE.width,
             top: this.y * TILE.height
