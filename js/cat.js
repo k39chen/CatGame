@@ -108,11 +108,12 @@ Cat.prototype.move = function() {
     console.log( self.route );
 
     // don't try to move the cat if there is no chance of escape
-    if (self.isGameOver()) {
-        alert("Game Over!");
+    if (self.isTrapped()) {
+        alert("You have trapped the cat!");
         return;
     }
 
+    // get the next best step to escape!
     coord_s = self.route[0].split(",");
     coord = {
         x: parseInt(coord_s[0],10),
@@ -125,13 +126,29 @@ Cat.prototype.move = function() {
     self.element.attr("x",self.x);
     self.element.attr("y",self.y);
     self.render();
+
+    // check to see if this means that the cat has escaped!
+    if (self.hasEscaped()) {
+        alert("The cat has escaped!");
+        return;
+    }
+};
+/**
+ * Checks to see if the cat has escaped.
+ *
+ * @method hasEscaped
+ */
+Cat.prototype.hasEscaped = function() {
+    var x = this.x;
+    var y = this.y;
+    return x < 0 || y < 0 || x >= this.board.width || y >= this.board.height;
 };
 /**
  * Checks if the cat is in a position to be game over.
  *
- * @method isGameOver
+ * @method isTrapped
  */
-Cat.prototype.isGameOver = function() {
+Cat.prototype.isTrapped = function() {
     // see if there any routes that will allow the cat to escape
     return this.route.length === 0;
 };
