@@ -137,8 +137,8 @@ Board.prototype.destroy = function() {
  * @return {Object} The board coordinates.
  */
 Board.prototype.getCoord = function(e) {
-    var left = e.clientX - this.element.offset().left,
-        top = e.clientY - this.element.offset().top,
+    var left = e.pageX - this.element.offset().left,
+        top = e.pageY - this.element.offset().top,
         x = Math.min(Math.floor(left / TILE.width), this.width),
         y = Math.min(Math.floor(top / TILE.height), this.height-1);
     return {x:x,y:y};
