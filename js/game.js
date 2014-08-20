@@ -18,8 +18,6 @@ var Game = {
         var boardWidth = rand(15,20);
         var boardHeight = rand(8,Math.min(boardWidth-2,16));
 
-        console.log(boardWidth,boardHeight)
-
         Game.Components.board = new Board(BOARD_TYPE.SQUARE, boardWidth, boardHeight);
         Game.Components.cat = new Cat(Game.Components.board);
 
@@ -27,10 +25,6 @@ var Game = {
         Game.Components.treeMask = $("<div>")
             .attr("id","tree-mask")
             .addClass("entity")
-            .css({
-                top: 0 - TILE.height/2,
-                left: 0
-            })
             .appendTo(Game.Components.board.element);
 
         // initialize all the game buttons
@@ -38,12 +32,10 @@ var Game = {
             function() { $(this).addClass("hover"); },
             function() { $(this).removeClass("hover"); }
         );
-
         $("#restart-game").click(function(){
             // reset the game board
             Game.reset();
         });
-
     },
     /**
      * Destroys the current instance of the game.

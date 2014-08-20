@@ -77,13 +77,13 @@ Board.prototype.init = function() {
     $hit.mousemove(function(e){
         var coord = self.getCoord(e);
 
-        if (coord && !self.hasTree(coord) && !self.hasCat(coord) && !self.hasPuddle(coord)) {
+        //if (coord && !self.hasTree(coord) && !self.hasCat(coord) && !self.hasPuddle(coord)) {
             $("#tree-mask").show().css({
                 zIndex: 1000 + coord.y,
                 left: coord.x * TILE.width,
                 top: coord.y * TILE.height - TILE.height/2
             });
-        }
+        //}
     });
     $hit.mouseout(function(e){
         var coord = self.getCoord(e);

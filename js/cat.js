@@ -11,6 +11,7 @@ var DIRECTION = {
     2: {x:+1},
     3: {y:-1}
 };
+var INFINITY = 100000000000000;
 /**
  * The Cat class.
  *
@@ -24,12 +25,18 @@ function Cat(board,x,y) {
     this.board = board;
     this.x = x;
     this.y = y;
+    this.route = [];
 
     // we're going to randomly position the cat in no x or y is provided!
     if (x === null || x === undefined || y === null || y === undefined) {
         var distanceFromEdge = 5;
-        this.x = rand(distanceFromEdge, this.board.width - distanceFromEdge),
-        this.y = rand(distanceFromEdge, this.board.height - distanceFromEdge);
+        while (true) {
+            this.x = rand(distanceFromEdge, this.board.width - distanceFromEdge),
+            this.y = rand(distanceFromEdge, this.board.height - distanceFromEdge);
+
+            // make sure that we don't place the cat on a puddle
+            if ($(".puddle[x="+this.x+"][y="+this.y+"]").length == 0) break;
+        }
     }
 
     // initializes the cat
@@ -54,7 +61,11 @@ Cat.prototype.init = function() {
         .appendTo(self.board.element);
 
     // render the cat
-    this.render();
+    self.render();
+
+    // determine the initial escape route!
+    self.route = self.escapeRoute();
+    console.log(self.route);
 };
 /**
  * Destroys the cat
@@ -89,44 +100,192 @@ Cat.prototype.render = function() {
  */
 Cat.prototype.move = function() {
     var self = this,
-        coord;
+        current = {x:self.x, y:self.y},
+        coord, coord_s;
 
-    // select a random direction and sequential path
-    var s = rand(0,4),
-        p = [s],
-        n = 4;
-    for (var i=1; i<n; i++) {
-        if (i<n/2) {
-            p[i] = p[0] + i + n/2 * rand(0,1);
-        } else {
-            p[i] = p[n-1-i] + n/2;
-        }
-        p[i] = p[i] % n;
+    // update the escape route
+    self.route = self.escapeRoute();
+    console.log( self.route );
+
+    // don't try to move the cat if there is no chance of escape
+    if (self.isGameOver()) {
+        alert("Game Over!");
+        return;
     }
 
-    // try each of the sequential path candidates until one is acceptable
-    var foundCoord = false;
-    for (var i=0; i<p.length && !foundCoord; i++) {
-        coord = {x:self.x, y:self.y};
+    coord_s = self.route[0].split(",");
+    coord = {
+        x: parseInt(coord_s[0],10),
+        y: parseInt(coord_s[1],10)
+    };
 
-        // preview the new coordinates after applying the direction
-        var d = p[i];
-        for (var c in DIRECTION[d]) {
-            coord[c] += DIRECTION[d][c];
-
-            if (self.canMove(coord)) {
-                foundCoord = true;
-                break;
-            }
-        }
-    }
     // update position to new coordinate
     self.x = coord.x;
     self.y = coord.y;
     self.element.attr("x",self.x);
     self.element.attr("y",self.y);
-
     self.render();
+};
+/**
+ * Checks if the cat is in a position to be game over.
+ *
+ * @method isGameOver
+ */
+Cat.prototype.isGameOver = function() {
+    // see if there any routes that will allow the cat to escape
+    return this.route.length === 0;
+};
+/**
+ * Determines an escape route for the cat. (Dijkstra)
+ *
+ * @method escpaeRoute
+ */
+Cat.prototype.escapeRoute = function() {
+    var self = this,
+        board = this.board;
+
+    // compute shortest path information
+    var shortestPathInfo = self.dijkstra(),
+        dist = shortestPathInfo.dist,
+        prev = shortestPathInfo.prev;
+
+    // get the shortest path to escape
+    var x, y, coord, minDist = INFINITY, dst = null;
+    for (x=-1; x<board.width+1; x++) {
+        // top
+        y = -1, coord = c(x,y);
+        if (dist[coord] < minDist) {
+            minDist = dist[coord];
+            dst = coord;
+        }
+        // bottom
+        y = board.height, coord = c(x,y);
+        if (dist[coord] < minDist) {
+            minDist = dist[coord];
+            dst = coord;
+        }
+    }
+    for (y=-1; y<board.height+1; y++) {
+        // left
+        x = -1, coord = c(x,y);
+        if (dist[coord] < minDist) {
+            minDist = dist[coord];
+            dst = coord;
+        }
+        // right
+        x = board.width, coord = c(x,y);
+        if (dist[coord] < minDist) {
+            minDist = dist[coord];
+            dst = coord;
+        }
+    }
+    // if an escape route exists then get the full path
+    var route = [];
+    if (dst) {
+        // trace it all the way back to the cat position
+        var p  = dst;
+        while (p != c(self.x,self.y)) {
+            route.push(p);
+            p = prev[p];
+        }
+        route = route.reverse();
+    }
+    return route;
+
+    function c(x,y) { return x+","+y; }
+};
+/**
+ * Calculates shortest path information from the cat to any tile.
+ *
+ * @method dijkstra
+ */
+Cat.prototype.dijkstra = function() {
+    var self = this,
+        board = this.board,
+        Graph = {},
+        current = {x:this.x, y:this.y},
+        dist = {},
+        prev = {},
+        s = c(this.x,this.y),
+        Q = [];
+
+    // create the graph from the board
+    for (var y=-1; y<board.height+1; y++) {
+        for (var x=-1; x<board.width+1; x++) {
+            var hasTree = $(".tree[x="+x+"][y="+y+"]").length > 0;
+            var hasPuddle = $(".puddle[x="+x+"][y="+y+"]").length > 0;
+            var t = "tile";
+            if (hasPuddle) t = "puddle";
+            if (hasTree) t = "tree";
+
+            Graph[c(x,y)] = {t:t,x:x,y:y};
+        }
+    }
+    // initialization
+    dist[s] = 0;
+    for (var v in Graph) {
+        if (v != s) {
+            dist[v] = INFINITY;
+            prev[v] = null;
+        }
+        Q[v] = $.extend({},Graph[v]);
+    }
+
+    // main loop to get shortest paths
+    while (size(Q) > 0) {
+        var u = minDistanceVertex(Q,dist);
+        if (u === null) break; 
+        delete Q[u];
+
+        var neighbors = getNeighbors(Q,u);
+        for (var v in neighbors) {
+            var alt = dist[u] + 1; // since length(u,v)=1 always
+            if (alt < dist[v]) {
+                dist[v] = alt;
+                prev[v] = u;
+            }
+        }
+    }
+
+    return {dist:dist, prev:prev};
+
+    // Dijkstra helpers
+    function c(x,y) {
+        return x+","+y;
+    }
+    function size(obj) {
+        return Object.keys(obj).length;
+    }
+    function minDistanceVertex(Q,dist) {
+        var minDist = INFINITY,
+            minVertex = null;
+
+        for (var v in Q) {
+            if (dist[v] < minDist) {
+                minVertex = v;
+                minDist = dist[v];
+            }
+        }
+        return minVertex;
+    }
+    function getNeighbors(Q,u) {
+        var coord = u.split(",");
+        var x = parseInt(coord[0],10);
+        var y = parseInt(coord[1],10);
+        var n = {};
+
+        // apply each of the possible directional changes
+        for (var d in DIRECTION) {
+            var c_ = self.getCoordAfterDirection({x:x,y:y},d);
+            var c_s = c(c_.x,c_.y);
+            var v = Q[c_s];
+
+            if (v && v.t != "puddle" && v.t != "tree") {
+                n[c_s] = v;
+            }
+        }
+        return n;
+    }
 };
 /**
  * Checks if the cat can move to the coordinate.
@@ -137,7 +296,32 @@ Cat.prototype.move = function() {
  */
 Cat.prototype.canMove = function(coord) {
     var scoord = "[x="+coord.x+"][y="+coord.y+"]";
-    return $(".tree"+scoord).length == 0 &&
-           $(".puddle"+scoord).length == 0 &&
-           $(".cat"+scoord).length == 0;
-}
+    return $(".tree"+scoord).length === 0 &&
+           $(".puddle"+scoord).length === 0 &&
+           $(".cat"+scoord).length === 0;
+};
+/**
+ * Checks if a tile at the requested coordinate is dirty.
+ *
+ * @method isDirty
+ * @param coord {Object} The coordinate.
+ * @return {Boolean} The result of the evaluation.
+ */
+Cat.prototype.isDirty = function(coord) {
+    return $(".tile[x="+coord.x+"][y="+coord.y+"].dirt").length > 0;
+};
+/**
+ * Gets the coordinate after applying a directional movement.
+ *
+ * @method getCoordAfterDirection
+ * @param current {Object} The current coordinate.
+ * @param direction {Object} The direction vector.
+ * @return {Object} The resulting coordinate.
+ */
+Cat.prototype.getCoordAfterDirection = function(current,direction) {
+    var coord = $.extend({},current);
+    for (var c in DIRECTION[direction]) {
+        coord[c] += DIRECTION[direction][c];
+    }
+    return coord;
+};
