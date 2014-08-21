@@ -1,17 +1,17 @@
 /**
  * Constants for the cat.
  */
-var CAT = {
+window.CAT = {
     width: 48,
     height: 41
 };
-var DIRECTION = {
+window.DIRECTION = {
     0: {x:-1},
     1: {y:+1},
     2: {x:+1},
     3: {y:-1}
 };
-var INFINITY = 100000000000000;
+window.INFINITY = 100000000000000;
 /**
  * The Cat class.
  *
@@ -20,7 +20,7 @@ var INFINITY = 100000000000000;
  * @param x {Number} The x position of the cat.
  * @param y {Number} The y position of the cat.
  */
-function Cat(id,board,x,y) {
+window.Cat = function(id,board,x,y) {
     this.element = null; // this will be created in the init.
     this.id = id;
     this.board = board;
@@ -44,7 +44,7 @@ function Cat(id,board,x,y) {
 
     // initializes the cat
     this.init();
-}
+};
 /**
  * Initializes the cat.
  *

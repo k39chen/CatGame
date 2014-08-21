@@ -1,7 +1,7 @@
 /**
  * Constants for trees.
  */
-var TREE = {
+window.TREE = {
     width: 48,
     height: 41
 };
@@ -13,7 +13,7 @@ var TREE = {
  * @param x {Number} The x position of the tree.
  * @param y {Number} The y position of the tree.
  */
-function Tree(board,x,y) {
+window.Tree = function(board,x,y) {
     this.element = null; // this will be created in the init.
     this.board = board;
     this.x = x;

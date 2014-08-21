@@ -1,4 +1,4 @@
-var Game = {
+window.Game = {
     /**
      * Contains all the important game components.
      */
@@ -13,6 +13,8 @@ var Game = {
      * @method init
      */
     init: function() {
+
+        console.log( rand(0,1) );
 
         // create the game board
         var boardWidth = rand(15,20);
@@ -65,15 +67,7 @@ var Game = {
         Game.init();
     }
 };
-
-/**
- * The entry point for the game code.
- */
-$(document).ready(function(){
+Template.game.rendered = function() {
     // initialize the game
     Game.init();
-});
-
-function rand(min,max) {
-    return Math.floor(Math.random()*(max-min+1))+min;
-}
+};

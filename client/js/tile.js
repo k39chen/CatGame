@@ -1,7 +1,7 @@
 /**
  * Constants for tiles.
  */
-var TILE = {
+window.TILE = {
     width: 48,
     height: 41
 };
@@ -13,7 +13,7 @@ var TILE = {
  * @param x {Number} The x position of the tile.
  * @param y {Number} The y position of the tile.
  */
-function Tile(board,x,y) {
+window.Tile = function(board,x,y) {
     this.element = null; // this will be created in the init.
     this.board = board;
     this.x = x;

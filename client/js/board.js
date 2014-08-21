@@ -1,7 +1,7 @@
 /**
  * Enumeration of board types.
  */
-var BOARD_TYPE = {
+window.BOARD_TYPE = {
     SQUARE: 0,
     HEXAGON: 1,
     CIRCLE: 2
@@ -15,7 +15,7 @@ var BOARD_TYPE = {
  * @param width {Number} The width of the board.
  * @param height {Number} The height of the board.
  */
-function Board(type, width, height) {
+window.Board = function(type, width, height) {
     this.element = $("#board");
     this.type = type;
     this.width = width;
@@ -26,7 +26,7 @@ function Board(type, width, height) {
 
     // initialize the board
     this.init();
-}
+};
 /**
  * Initializes the board.
  *
