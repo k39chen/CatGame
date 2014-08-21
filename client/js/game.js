@@ -14,8 +14,6 @@ window.Game = {
      */
     init: function() {
 
-        console.log( rand(0,1) );
-
         // create the game board
         var boardWidth = rand(15,20);
         var boardHeight = rand(8,Math.min(boardWidth-2,16));

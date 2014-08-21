@@ -35,27 +35,26 @@ h1 {
     display: none;
     background-image: url("../assets/images/tree.png");
     opacity: 0.7;
-}
-#tree-mask.block {
-    background-image: url("../assets/images/treeblock.png");
+
+    &.block {
+        background-image: url("../assets/images/treeblock.png");
+    }
 }
 .tile {
     background-image: url("../assets/images/grass.png");
-}
-.tile.dirt {
-    background-image: url("../assets/images/dirt.png");
-}
-.tile.puddle {
-    background-image: url("../assets/images/water.png");
+
+    &.dirt {
+        background-image: url("../assets/images/dirt.png");
+    }
+    &.puddle {
+        background-image: url("../assets/images/water.png");
+    }
 }
 .tree {
     background-image: url("../assets/images/tree.png");
 }
 .cat {
     background-image: url("../assets/images/cat.png");
-}
-.cat.hover {
-    /* change image */
 }
 .button {
     cursor: pointer;
@@ -64,7 +63,8 @@ h1 {
     background-color: #2D6BA3;
     padding: 12px 16px;
     border-radius: 8px;
-}
-.button.hover {
-    background-color: #4E89BE;
+
+    &.hover {
+        background-color: #4e89be;
+    }
 }

@@ -132,8 +132,11 @@ Cat.prototype.move = function() {
     // check to see if this means that the cat has escaped!
     if (self.hasEscaped()) {
 
+        /*
         Game.Components.cats[self.id].destroy();
         delete Game.Components.cats[self.id];
+        */
+
         alert("The cat has escaped!");
         return;
     }
