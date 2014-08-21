@@ -18,19 +18,10 @@ window.Game = {
         var boardWidth = rand(15,20);
         var boardHeight = rand(8,Math.min(boardWidth-2,16));
 
-        Game.openDialog({
-            title: "CATCH THE CAT!",
-            content: "<p><b>Watch out!</b> Your cat is trying to escape the safety of your garden. Trap it by placing trees on grassy areas.</p><div style='margin:0 auto;width:101px;height:101px;background:url(assets/images/cat.png) 0px -54px'></div>",
-            buttons: {"START GAME": {click:function(){Game.closeDialog();}}}
-        });
-
-
         Game.Components.board = new Board(BOARD_TYPE.SQUARE, boardWidth, boardHeight);
         Game.Components.cats = {
             cat1: new Cat("cat1",Game.Components.board)
         };
-
-
 
         // create a tree mask
         Game.Components.treeMask = $("<div>")
@@ -57,7 +48,14 @@ window.Game = {
 
         // destroys the board and associated components
         Game.Components.board.destroy();
-
+        Game.Components.board = null;
+        
+        // destroy all the cats
+        for (var id in Game.Components.cats) {
+            Game.Components.cats[id].destroy();
+        }
+        Game.Components.cats = null;
+        
         // unbind all the button events
         $(".button")
             .unbind("mouseover")
@@ -73,8 +71,6 @@ window.Game = {
         Game.destroy();
         Game.init();
     },
-
-
     openDialog: function(options) {
         var id = $(".modal").length;
 
@@ -118,6 +114,17 @@ window.Game = {
     }
 };
 Template.game.rendered = function() {
+
+    // show the welcome dialog
+    Game.openDialog({
+        title: "CATCH THE CAT!",
+        content: "<p><b>Watch out!</b> Your cat is trying to escape the safety of your garden. Trap it by placing trees on grassy areas.</p><div style='margin:0 auto;width:101px;height:101px;background:url(assets/images/cat.png) 0px -54px'></div>",
+        buttons: {"START GAME": {click:function(){
+            Game.closeDialog();
+            Game.init();
+        }}}
+    });
+
     // initialize the game
-    Game.init();
+    //Game.init();
 };

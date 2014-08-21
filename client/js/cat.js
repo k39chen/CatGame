@@ -111,7 +111,15 @@ Cat.prototype.move = function() {
 
     // don't try to move the cat if there is no chance of escape
     if (self.isTrapped()) {
-        alert("You have trapped the cat!");
+        Game.openDialog({
+            title: "YOU WIN!!",
+            content: "<p>You've saved your cat from the harshness of the outside world!</p><p>Days later, your cat is trying to escape the safety of your garden again! Would you like to...</p>",
+            buttons: {"PLAY AGAIN?":{click:function(){
+                Game.closeDialog();
+                Game.reset();
+            }}}
+
+        });
         return;
     }
 
@@ -131,13 +139,15 @@ Cat.prototype.move = function() {
 
     // check to see if this means that the cat has escaped!
     if (self.hasEscaped()) {
+        Game.openDialog({
+            title: "YOU LOSE!!",
+            content: "<p>Your precious cat has fled the safety of your garden!</p><p>In your loneliness you went out and bought another cat but its escaped again! Would you like to...</p>",
+            buttons: {"PLAY AGAIN?":{click:function(){
+                Game.closeDialog();
+                Game.reset();
+            }}}
 
-        /*
-        Game.Components.cats[self.id].destroy();
-        delete Game.Components.cats[self.id];
-        */
-
-        alert("The cat has escaped!");
+        });
         return;
     }
 };
