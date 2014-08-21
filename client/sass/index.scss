@@ -21,7 +21,7 @@ h1 {
     position: absolute;
     top: 0px;
     left: 0px;
-    z-index: 100000000;
+    z-index: 10000;
 }
 .entity {
     position: absolute;
@@ -60,11 +60,57 @@ h1 {
     cursor: pointer;
     color: #FFF;
     display: inline-block;
-    background-color: #2D6BA3;
+    background-color: #BF64FC;
     padding: 12px 16px;
     border-radius: 8px;
 
     &.hover {
-        background-color: #4e89be;
+        background-color: #FFAD00;
     }
+}
+.modal {
+    z-index: 100000;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(0,0,0,0.6);
+    text-align: center;
+
+    .dialog {
+        overflow: hidden;
+        border-radius: 16px;
+        margin: 10% auto;
+        width: 600px;
+        height: 300px;
+        background: white;
+        opacity: 0.8;
+        box-shadow: 0px 5px 5px rgba(0,0,0,0.8);
+
+        .dialog-header {
+            padding: 12px;
+            background-color: #BF64FC;
+            color: #FFF;
+            margin-bottom: 24px;
+        }
+        .dialog-content {
+            margin-bottom: 12px;
+            p {
+                b {
+                    font-weight: normal;
+                    color: #BF64FC;
+                }
+                margin: 0 24px 12px 24px;
+            }
+        }
+        .dialog-buttons {
+            margin-bottom: 24px;
+        }
+    }
+}
+
+
+.blur {
+    -webkit-filter: blur(2px);
 }
