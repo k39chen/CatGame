@@ -20,8 +20,9 @@ var INFINITY = 100000000000000;
  * @param x {Number} The x position of the cat.
  * @param y {Number} The y position of the cat.
  */
-function Cat(board,x,y) {
+function Cat(id,board,x,y) {
     this.element = null; // this will be created in the init.
+    this.id = id;
     this.board = board;
     this.x = x;
     this.y = y;
@@ -29,10 +30,11 @@ function Cat(board,x,y) {
 
     // we're going to randomly position the cat in no x or y is provided!
     if (x === null || x === undefined || y === null || y === undefined) {
-        var distanceFromEdge = 5;
+        var distanceFromEdgeH = Math.floor(this.board.width * 0.3);
+        var distanceFromEdgeV = Math.floor(this.board.height * 0.3);
         while (true) {
-            this.x = rand(distanceFromEdge, this.board.width - distanceFromEdge),
-            this.y = rand(distanceFromEdge, this.board.height - distanceFromEdge);
+            this.x = rand(distanceFromEdgeH, this.board.width - distanceFromEdgeH),
+            this.y = rand(distanceFromEdgeV, this.board.height - distanceFromEdgeV);
 
             // make sure that we don't place the cat on a puddle or another cat
             if ($(".puddle[x="+this.x+"][y="+this.y+"]").length == 0 &&
@@ -52,6 +54,7 @@ Cat.prototype.init = function() {
     var self = this;
 
     self.element = $("<div>")
+        .attr("id",self.id)
         .addClass("entity cat")
         .attr("x",this.x)
         .attr("y",this.y)
@@ -66,7 +69,6 @@ Cat.prototype.init = function() {
 
     // determine the initial escape route!
     self.route = self.escapeRoute();
-    console.log(self.route);
 };
 /**
  * Destroys the cat
@@ -106,7 +108,6 @@ Cat.prototype.move = function() {
 
     // update the escape route
     self.route = self.escapeRoute();
-    console.log( self.route );
 
     // don't try to move the cat if there is no chance of escape
     if (self.isTrapped()) {
@@ -130,6 +131,9 @@ Cat.prototype.move = function() {
 
     // check to see if this means that the cat has escaped!
     if (self.hasEscaped()) {
+
+        Game.Components.cats[self.id].destroy();
+        delete Game.Components.cats[self.id];
         alert("The cat has escaped!");
         return;
     }
@@ -208,6 +212,8 @@ Cat.prototype.escapeRoute = function() {
         }
         route = route.reverse();
     }
+
+    console.log(self.id,route);
     return route;
 
     function c(x,y) { return x+","+y; }

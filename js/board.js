@@ -108,8 +108,8 @@ Board.prototype.init = function() {
             self.trees.push(new Tree(self,coord.x,coord.y));
 
             // have the cat make its next move
-            for (var i=0; i<Game.Components.cats.length; i++) {
-                Game.Components.cats[i].move();
+            for (var id in Game.Components.cats) {
+                Game.Components.cats[id].move();
             }
         }
     });
